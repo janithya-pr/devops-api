@@ -1,0 +1,132 @@
+# Executables
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binaries
+*.test
+
+# Go coverage
+*.out
+coverage.out
+coverage.html
+
+# Build directories
+bin/
+build/
+dist/
+
+# Vendor (only if not committing)
+vendor/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Temporary
+tmp/
+.cache/
+
+# Environment
+.env
+.env.*
+
+# Docker
+docker-compose.override.yml
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+
+# Kubernetes
+*.secret.yaml
+
+
+
+
+
+
+# ########################################
+# # Binaries
+# ########################################
+
+# bin/
+# build/
+# dist/
+
+# ########################################
+# # Go
+# ########################################
+
+# *.exe
+# *.dll
+# *.so
+# *.dylib
+# *.test
+# *.out
+
+# ########################################
+# # Coverage
+# ########################################
+
+# coverage.out
+# coverage.html
+
+# ########################################
+# # Logs
+# ########################################
+
+# *.log
+
+# ########################################
+# # Environment
+# ########################################
+
+# .env
+
+# ########################################
+# # IDE
+# ########################################
+
+# .vscode/
+# .idea/
+
+# ########################################
+# # OS
+# ########################################
+
+# .DS_Store
+# Thumbs.db
+
+# ########################################
+# # Temporary
+# ########################################
+
+# tmp/
+# .cache/
+
+# ########################################
+# # Terraform
+# ########################################
+
+# .terraform/
+# *.tfstate
+# *.tfstate.*
+# crash.log
+
+# ########################################
+# # Kubernetes
+# ########################################
+
+# *.secret.yaml
