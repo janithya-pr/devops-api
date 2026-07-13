@@ -91,23 +91,87 @@ Thumbs.db
 ## Running
 
 ```bash
-go mod init github.com/janithya-pr/devops-api
+# Connect GitHub SSH
+ssh-keygen -t ed25519 -C "your_email@example.com"
+
+# start the ssh-agent in the background
+Get-Service -Name ssh-agent | Set-Service -StartupType Manual  # or Automatic
+# or
+Get-Service ssh-agent
+Start-Service ssh-agent
+
+ssh-add $HOME\.ssh\id_ed25519
+ssh-add -l  # chek all krys
+
+# if have more than one github accounts
+# create
+C:\Users\USER\.ssh\config
+# open
+notepad $HOME\.ssh\config
+# add
+"# Personal GitHub account
+Host github-personal
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/id_ed25519
+    IdentitiesOnly yes
+
+# Work GitHub account
+Host github-work
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/id_ed25519_work
+    IdentitiesOnly yes"
+
+Get-Content $HOME\.ssh\id_ed25519.pub  # copy and add to github
+ssh -T git@github.com  # retun the success
+
+# Create your project locally and push
+mkdir reponame  # or your service name
+cd reponame     # or your service name
+
+go mod init github.com/yourusername/reponame  # or your service name
 go mod tidy
-go run ./cmd/api
 
 git init
 
-# Create your project locally
-mkdir auth-service
-cd auth-service
-
-git init
-
-go mod init github.com/yourusername/auth-service
-
-git add .
-git commit -m "Initial commit"
+git add .  # or internal/user/service.go
+git commit -m "Initial commit"  # or "Initial project setup"
+git status
 
 git branch -M main
-git remote add origin git@github.com:yourusername/auth-service.git
-git push -u origin main
+git branch
+
+# add origin
+git remote add origin git@github.com:yourusername/reponame.git
+# ceck origin
+git remote -v
+# remove origin
+git remote remove origin
+
+git push -u origin main  # or another branch
+git push  # we can use after the first push
+
+# Use repo already created and branching
+git clone git@github.com:company/reponame.git
+cd reponame
+
+git branch            # check current branch
+git pull origin main  # or develop
+
+# create branch
+git checkout -b feature/feature-changing  # or git switch -c feature/user-authentication
+git branch # check current branch
+
+git add internal/auth/service.go # sometimes git add .
+git commit -m "Add JWT authentication middleware"
+git push -u origin feature/user-authentication
+git push  # we can use after the first push
+
+# update local main
+git checkout main
+git pull origin main
+
+# delete feature branch
+git branch -d feature/user-authentication             # locally
+git push origin --delete feature/user-authentication  # on github
