@@ -1,93 +1,50 @@
-# syntax=docker/dockerfile:1.7
-
-############################
-# Builder
-############################
-FROM golang:1.25-alpine AS builder
-
+# syntax=docker/dockerfile:1.8
+# STAGE 1: Buildtime
+FROM golang:1.26-alpine AS builder
+RUN apk add --no-cache ca-certificates tzdata
+# RUN apk add --no-cache ca-certificates tzdata git
 WORKDIR /src
-
-# Required for HTTPS requests during build
-RUN apk add --no-cache ca-certificates
-
-# Cache dependencies
 COPY go.mod go.sum ./
-RUN go mod download
-
-# Copy source
+RUN --mount=type=cache,target=/go/pkg/mod \
+    go mod download
 COPY . .
+RUN --mount=type=cache,target=/go/pkg/mod \
+    --mount=type=cache,target=/root/.cache/go-build \
+    CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
+    go build -trimpath -ldflags="-s -w -buildid=" \
+    -o /out/api ./cmd/api
 
-# Build static binary
-RUN CGO_ENABLED=0 \
-    GOOS=linux \
-    GOARCH=amd64 \
-    go build \
-        -trimpath \
-        -ldflags="-s -w -buildid=" \
-        -o /out/server \
-        ./cmd/api
-
-
-############################
-# Runtime
-############################
-FROM gcr.io/distroless/static-debian12:nonroot
-
-COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
-COPY --from=builder /out/server /server
-
-EXPOSE 8080
-
-USER nonroot:nonroot
-
-ENTRYPOINT ["/server"]
-
-
-
-
-
-
-# # syntax=docker/dockerfile:1.7
-
-# ############################
-# # Builder
-# ############################
-# FROM golang:1.25-alpine AS builder
-
-# WORKDIR /src
-
-# # CA certificates are required for HTTPS during build.
-# RUN apk add --no-cache ca-certificates
-
-# # Download dependencies first (better Docker layer caching).
-# COPY go.mod go.sum ./
-
-# RUN --mount=type=cache,target=/go/pkg/mod \
-#     go mod download
-
-# # Copy application source.
-# COPY . .
-
-# # Build cache speeds up incremental builds in CI.
-# RUN --mount=type=cache,target=/root/.cache/go-build \
-#     CGO_ENABLED=0 \
-#     GOOS=linux \
-#     go build \
-#         -trimpath \
-#         -ldflags="-s -w -buildid=" \
-#         -o /out/server \
-#         ./cmd/api
-
-# ############################
-# # Runtime
-# ############################
+# STAGE 2: Runtime
+FROM gcr.io/distroless/static-debian12:nonroot AS runner
 # FROM gcr.io/distroless/static-debian12:nonroot
-
-# COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
-# COPY --from=builder /out/server /server
-
-# EXPOSE 8080
-
+# WORKDIR /app
+COPY --from=builder /out/api /api
+# COPY --from=builder /out/service ./service
+# COPY --from=builder /main /main
 # USER nonroot:nonroot
+# USER 65534:65534
+# EXPOSE 8080
+ENTRYPOINT ["/api"]
 
-# ENTRYPOINT ["/server"]
+# -----------------------------HEALTHCHECK---------------------------------
+# # DISTROLESS HEALTHCHECK: Executed directly with no shell or wget needed
+# HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+#     CMD ["./service", "--health"]
+
+# --------------------------------LABEL------------------------------------
+# LABEL maintainer="your-team@example.com" \
+#       application="your-microservice" \
+#       version="1.0"
+
+# ---------------------------------ARG-------------------------------------
+# FROM --platform=$BUILDPLATFORM golang:1.26-alpine AS builder
+# ...
+
+# ARG TARGETOS
+# ARG TARGETARCH
+# RUN --mount=type=cache,target=/go/pkg/mod \
+#     --mount=type=cache,target=/root/.cache/go-build \
+#     CGO_ENABLED=0 GOOS=$TARGETOS GOARCH=$TARGETARCH \  or CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} \
+#     go build -trimpath -ldflags="-s -w -buildid=" \
+#     -o /app/service ./cmd/service
+# ...
