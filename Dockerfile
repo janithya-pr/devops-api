@@ -1,5 +1,5 @@
-# Build stage
-FROM golang:1.26 AS builder
+# Stage 1: Build
+FROM golang:1.26-bookworm AS builder
 
 WORKDIR /app
 
@@ -9,12 +9,13 @@ RUN go mod download
 COPY . .
 
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
-    go build -o server ./cmd/api
+    go build -trimpath -ldflags="-s -w -buildid=" \
+    -o /out/server ./cmd/api
 
-# Runtime
-FROM gcr.io/distroless/static-debian12
+# Stage 2: Runtime
+FROM gcr.io/distroless/static-debian12:nonroot
 
-COPY --from=builder /app/server /server
+COPY --from=builder /out/server /server
 
 EXPOSE 8080
 
