@@ -102,6 +102,38 @@ Test
 
 http://localhost:8080/api/v1/profile
 
+docker build -t devops-api:v1.0.0 .
+docker tag devops-api:v1.0.0 456107725475.dkr.ecr.ap-southeast-1.amazonaws.com/devops-api:v1.0.0
+docker push 456107725475.dkr.ecr.ap-southeast-1.amazonaws.com/devops-api:v1.0.0
+
+docker tag devops-api:v1.0.0 456107725475.dkr.ecr.ap-southeast-1.amazonaws.com/devops-api:latest
+docker push 456107725475.dkr.ecr.ap-southeast-1.amazonaws.com/devops-api:latest
+
+One microservice = One Git repository (often, though some teams use a monorepo).
+One microservice = One Docker image.
+One Docker image = One ECR repository.
+One ECS/Fargate service = Runs one Docker image from one ECR repository.
+
+GitHub
+     │
+     ▼
+Docker Image
+     │
+     ▼
+Container Registry
+     │
+     ├── AWS → Amazon ECR
+     ├── GCP → Artifact Registry
+     └── Azure → Azure Container Registry
+     │
+     ▼
+Container Orchestrator
+     │
+     ├── ECS/Fargate
+     ├── GKE
+     ├── AKS
+     └── Kubernetes
+
 Builder
 ├── /app
 │   ├── cmd

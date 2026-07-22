@@ -1,137 +1,21 @@
-# Git
-.git
-.gitignore
-
-# GitHub
-.github
-
-# IDE
+# Editor & IDE settings
 .vscode
 .idea
 
-# OS
-.DS_Store
-Thumbs.db
+# Git files
+.git
+.gitignore
 
-# Build
-bin
-dist
-build
-coverage
+# Docker build configs
+Dockerfile*
+.dockerignore
 
-# Logs
+# Logs & temp files
 *.log
+.DS_Store
 
-# Environment
-.env
-.env.*
+# Environment & secret files
+.env*
 
-# Docs
+# Documentation & metadata
 README.md
-
-# Docker
-Dockerfile
-docker-compose.yml
-docker-compose.override.yml
-
-# Go
-*.test
-*.out
-
-# Temporary
-tmp
-.cache
-
-# Node (if added)
-node_modules
-
-
-
-
-
-
-
-
-# ########################################
-# # Git
-# ########################################
-
-# .git
-# .gitignore
-# .github
-
-# ########################################
-# # IDE
-# ########################################
-
-# .vscode/
-# .idea/
-
-# ########################################
-# # Build output
-# ########################################
-
-# bin/
-# build/
-# dist/
-
-# ########################################
-# # Test / Coverage
-# ########################################
-
-# coverage.out
-# coverage.html
-# *.test
-# *.out
-
-# ########################################
-# # Logs
-# ########################################
-
-# *.log
-
-# ########################################
-# # Temporary
-# ########################################
-
-# tmp/
-# .cache/
-
-# ########################################
-# # Environment
-# ########################################
-
-# .env
-# .env.*
-
-# !.env.example
-
-# ########################################
-# # Terraform
-# ########################################
-
-# .terraform/
-# *.tfstate
-# *.tfstate.*
-
-# ########################################
-# # Kubernetes
-# ########################################
-
-# *.secret.yaml
-
-# ########################################
-# # Docker
-# ########################################
-
-# docker-compose.yml
-# docker-compose.override.yml
-
-# ########################################
-# # Misc
-# ########################################
-
-# .DS_Store
-# Thumbs.db
-
-# README.md
