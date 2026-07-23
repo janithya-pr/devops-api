@@ -103,16 +103,28 @@ Test
 http://localhost:8080/api/v1/profile
 
 docker build -t devops-api:v1.0.0 .
+aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin 456107725475.dkr.ecr.ap-southeast-1.amazonaws.com
 docker tag devops-api:v1.0.0 456107725475.dkr.ecr.ap-southeast-1.amazonaws.com/devops-api:v1.0.0
 docker push 456107725475.dkr.ecr.ap-southeast-1.amazonaws.com/devops-api:v1.0.0
 
 docker tag devops-api:v1.0.0 456107725475.dkr.ecr.ap-southeast-1.amazonaws.com/devops-api:latest
 docker push 456107725475.dkr.ecr.ap-southeast-1.amazonaws.com/devops-api:latest
+<your-account-id>.dkr.ecr.<region>.amazonaws.com/devops-api:latest
 
 One microservice = One Git repository (often, though some teams use a monorepo).
 One microservice = One Docker image.
 One Docker image = One ECR repository.
 One ECS/Fargate service = Runs one Docker image from one ECR repository.
+
+| Resource        |                                          Quantity |
+| --------------- | ------------------------------------------------: |
+| ECS Cluster     |                             **1 per environment** |
+| ECS Service     |                            **1 per microservice** |
+| Task Definition |                            **1 per microservice** |
+| ECR Repository  |                            **1 per microservice** |
+| Docker Image    |                            **1 per microservice** |
+| Fargate Tasks   | **One or more per service**, depending on scaling |
+
 
 GitHub
      │
