@@ -159,3 +159,53 @@ Runtime
 └── server
 
 ## CI/CD
+
+on:
+  pull_request:
+
+on:
+  pull_request:
+    branches:
+      - main
+
+on:
+  push:
+    branches:
+      - main
+
+on:
+  push:
+    tags:
+      - "v*"
+
+on:
+  workflow_dispatch:
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: "ECR image tag"
+        required: false
+        type: string
+        default: ""
+
+- name: Health Check
+  run: |
+    curl --fail --retry 10 --retry-delay 10 \
+    http://your-alb-url/health
+
+| Purpose              | Trigger                   |
+| -------------------- | ------------------------- |
+| CI                   | `pull_request`            |
+| Development/Staging  | `push` to `main`          |
+| Production           | `push` on Git tags (`v*`) |
+| Emergency / Rollback | `workflow_dispatch`       |
+
+| Workflow       | Trigger                                 | Purpose                                               |
+| -------------- | --------------------------------------- | ----------------------------------------------------- |
+| `ci.yml`       | Pull requests and feature branch pushes | Format, lint, vet, test, build, and scan              |
+| `cd.yml`       | Push to `main`                          | Build image, push to ECR, deploy to ECS               |
+| `release.yml`  | GitHub Release                          | Build and publish versioned images                    |
+| `rollback.yml` | Manual                                  | Redeploy a previous image or task definition          |
+| `nightly.yml`  | Scheduled                               | Security scans, dependency checks, long-running tests |

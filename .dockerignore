@@ -2,20 +2,17 @@
 .vscode
 .idea
 
-# Git files
+# Git & GitHub files
 .git
+.github
 .gitignore
 
 # Docker build configs
-Dockerfile*
+Dockerfile
 .dockerignore
 
-# Logs & temp files
-*.log
-.DS_Store
-
 # Environment & secret files
-.env*
+.env
 
 # Documentation & metadata
 README.md
