@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: devops-api-config
+  namespace: devops
+data:
+  PROFILE_NAME: "Janithya Priyabhashana"
+  PROFILE_TITLE: "DevOps Engineer"
