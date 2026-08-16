@@ -209,3 +209,14 @@ on:
 | `release.yml`  | GitHub Release                          | Build and publish versioned images                    |
 | `rollback.yml` | Manual                                  | Redeploy a previous image or task definition          |
 | `nightly.yml`  | Scheduled                               | Security scans, dependency checks, long-running tests |
+
+
+[ Kubernetes Cluster ]
+  ├── Node A (VM / Server)
+  │    └── Pod 1 (IP: 10.244.0.1) ────> [ Replica 1 ]
+  │         ├── Container A (Web App)
+  │         └── Container B (Sidecar Logger)
+  │
+  └── Node B (VM / Server)
+       └── Pod 2 (IP: 10.244.1.5) ────> [ Replica 2 ]
+            └── Container A (Web App)
